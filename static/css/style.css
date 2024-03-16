@@ -1,0 +1,32 @@
+header {
+    width: auto;
+    background: white;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    padding-right: 5%;
+    padding-left: 5%;
+    height: 98px;
+    box-shadow: 0 0 10px #9a9a9a6e;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+header h1 {
+    padding-top: 10px;
+    margin-left: 30px;
+}
+
+nav {
+    display: flex;
+    position: absolute;
+    top: 30px;
+    right: 5%;
+}
+
+main {
+    margin-top: 128px;
+}
