@@ -19,15 +19,15 @@ def add_map():
             maps.type = form.type.data
             maps.text += f';;;{form.text.data}'
             maps.places += f';;;{form.place.data}'
-            maps.map = f'{get_map(get_coordinates(form.city.data), 10, maps.places)}'
+            maps.map = f'{get_map(get_coordinates1(form.city.data), 10, maps.places)}'
         else:
             maps = Maps()
             maps.owner = current_user.id
             maps.type = form.type.data
             maps.text = form.text.data
             maps.city = form.city.data
-            maps.places = form.place.data
-            maps.map = f'{get_map(get_coordinates(form.city.data), 10, maps.places)}'
+            maps.places = f'{form.city.data};;;{form.place.data}'
+            maps.map = f'{get_map(get_coordinates1(form.city.data), 10, maps.places)}'
         db_sess.add(maps)
         db_sess.commit()
         return redirect('/')
@@ -77,7 +77,7 @@ def edit_maps(_id):
             maps.type = form.type.data
             maps.text = form.text.data
             maps.places = form.place.data
-            maps.map = f'{get_map(get_coordinates(form.city.data), 10, maps.places)}'
+            maps.map = f'{get_map(get_coordinates1(form.city.data), 10, maps.places)}'
             db_sess.commit()
             return redirect('/')
         else:
@@ -85,18 +85,41 @@ def edit_maps(_id):
     return render_template('mapadd.html', title='Редактирование заметки', form=form)
 
 
-def get_coordinates(address):
+def get_coordinates1(address):
     url = (f'http://geocode-maps.yandex.ru/1.x/?apikey=40d1649f-0493-4b70-98ba-98533de7710b&'
            f'geocode={address}&format=json')
     data = requests.get(url).json()
     geo_object = data["response"]["GeoObjectCollection"]["featureMember"][0]["GeoObject"]
-    coordinates = map(float, geo_object['Point']['pos'].split(' '))
+    coordinates = map(str, geo_object['Point']['pos'].split(' '))
     return list(coordinates)
 
 
+def get_coordinates2(place_name):
+    api_key = 'dda3ddba-c9ea-4ead-9010-f43fbc15c6e3'
+    url = f'https://search-maps.yandex.ru/v1/?text={place_name}&type=biz&lang=ru_RU&apikey={api_key}'
+    try:
+        response = requests.get(url)
+        data = response.json()
+        if response.status_code == 200 and 'features' in data:
+            if data['features']:
+                coordinates = data['features'][0]['geometry']['coordinates']
+                return f'{coordinates[::-1][1]},{coordinates[::-1][0]}'
+            else:
+                return None
+        else:
+            print("Ошибка при получении данных:", data)
+            return None
+    except Exception as e:
+        print("Произошла ошибка при выполнении запроса:", e)
+        return None
+
+
 def get_map(ll, z, places):
-    map_params = {"ll": ",".join([str(ll[0]), str(ll[1])]), "z": z, 'l': 'map'}
-    map_api_server = "http://static-maps.yandex.ru/1.x/?apikey=fbd7d1f6-f3ac-4002-91a2-cc0552631701&size=300,300&"
-    response = f'{map_api_server}ll={map_params["ll"]}&z={map_params["z"]}&l=map'
+    places = places.split(';;;')
+    map_params = {"ll": ",".join([str(ll[0]), str(ll[1])]), "z": z, 'l': 'map',
+                  "pt": "~".join([get_coordinates2(f'{places[0]},{point}') + f',pmwtm{num + 1}'
+                                  for num, point in enumerate(places[1:])])}
+    map_api_server = "http://static-maps.yandex.ru/1.x/?apikey=fbd7d1f6-f3ac-4002-91a2-cc0552631701&size=300,300&l=map&"
+    response = f'{map_api_server}ll={map_params["ll"]}&z={map_params["z"]}&pt={map_params["pt"]}'
     return response
 

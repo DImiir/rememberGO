@@ -40,6 +40,7 @@ def reqister():
         user.password(form.password.data)
         db_sess.add(user)
         db_sess.commit()
+        login_user(user)
         return redirect('/')
     return render_template('register.html', title='Регистрация', form=form)
 

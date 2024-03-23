@@ -6,7 +6,7 @@
     <br>
     {% if maps %}
         {% for map in maps %}
-            <h3>Заметка № {{ loop.index }}</h3>
+            <h4>Заметка № {{ loop.index }}</h4>
                 <table>
                     <tr>
                         <th>Карта</th>
@@ -14,7 +14,15 @@
                     </tr>
                     <tr>
                         <td><img src="{{ map.map }}"></td>
-                        <td>{{ map.text }}</td>
+                        <td>
+                            {% if ';;;' in map.text %}
+                                {% for text in map.text.split(';;;') %}
+                                    <br>{{ loop.index }} {{ text }}
+                                {% endfor %}
+                            {% else %}
+                                {{ map.text }}
+                            {% endif %}
+                        </td>
                     </tr>
                 </table>
                 {% if current_user.id == map.owner or current_user.id == 1 %}

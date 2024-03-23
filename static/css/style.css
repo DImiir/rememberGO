@@ -30,3 +30,7 @@ nav {
 main {
     margin-top: 128px;
 }
+
+table {
+    word-break: break-all;
+}
