@@ -19,7 +19,7 @@ def add_map():
             maps.type = form.type.data
             maps.text += f';;;{form.text.data}'
             maps.places += f';;;{form.place.data}'
-            maps.map = f'{get_map(get_coordinates1(form.city.data), 10, maps.places)}'
+            maps.map = f'{get_map(get_coordinates1(form.city.data), maps.places)}'
         else:
             maps = Maps()
             maps.owner = current_user.id
@@ -27,7 +27,7 @@ def add_map():
             maps.text = form.text.data
             maps.city = form.city.data
             maps.places = f'{form.city.data};;;{form.place.data}'
-            maps.map = f'{get_map(get_coordinates1(form.city.data), 10, maps.places)}'
+            maps.map = f'{get_map(get_coordinates1(form.city.data), maps.places)}'
         db_sess.add(maps)
         db_sess.commit()
         return redirect('/')
@@ -63,7 +63,6 @@ def edit_maps(_id):
         if maps:
             form.type.data = maps.type
             form.text.data = maps.text
-            form.city.data = maps.city
             form.place.data = maps.places
         else:
             abort(404)
@@ -77,7 +76,7 @@ def edit_maps(_id):
             maps.type = form.type.data
             maps.text = form.text.data
             maps.places = form.place.data
-            maps.map = f'{get_map(get_coordinates1(form.city.data), 10, maps.places)}'
+            maps.map = f'{get_map(get_coordinates1(form.city.data), maps.places)}'
             db_sess.commit()
             return redirect('/')
         else:
@@ -114,12 +113,12 @@ def get_coordinates2(place_name):
         return None
 
 
-def get_map(ll, z, places):
+def get_map(ll, places):
     places = places.split(';;;')
-    map_params = {"ll": ",".join([str(ll[0]), str(ll[1])]), "z": z, 'l': 'map',
+    map_params = {"ll": ",".join([str(ll[0]), str(ll[1])]), 'l': 'map',
                   "pt": "~".join([get_coordinates2(f'{places[0]},{point}') + f',pmwtm{num + 1}'
                                   for num, point in enumerate(places[1:])])}
     map_api_server = "http://static-maps.yandex.ru/1.x/?apikey=fbd7d1f6-f3ac-4002-91a2-cc0552631701&size=300,300&l=map&"
-    response = f'{map_api_server}ll={map_params["ll"]}&z={map_params["z"]}&pt={map_params["pt"]}'
+    response = f'{map_api_server}ll={map_params["ll"]}&pt={map_params["pt"]}'
     return response
 
