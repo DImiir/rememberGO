@@ -20,9 +20,8 @@ class RegisterForm(FlaskForm):
 
 
 class MapForm(FlaskForm):
-    type = BooleanField('Вы там были ?')
-    text = StringField('Текст к заметке')
     city = StringField('Населённый пункт')
     place = StringField('Место')
+    text = StringField('Текст заметки')
     submit = SubmitField('submit')
 

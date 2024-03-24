@@ -4,18 +4,17 @@
     <h2>Мои заметки</h2>
     <a href="/add_map" class="btn btn-secondary">Добавить заметку</a>
     <br>
-    {% if maps %}
-        {% for map in maps %}
-            <h4>Заметка № {{ loop.index }}</h4>
+    {% for map in %}
+        <h4>Заметка № {{ loop.index }}</h4>
                 <table>
                     <tr>
                         <th>Карта</th>
                         <th>Замечания</th>
                     </tr>
                     <tr>
-                        <td><img src="{{ map.map }}"></td>
+                        <td><img src="{{ response }}"></td>
                         <td>
-                            {% if ';;;' in map.text %}
+                            {% if ', ' in map.text %}
                                 {% for text in map.text.split(';;;') %}
                                     <br>{{ loop.index }} {{ text }}
                                 {% endfor %}
