@@ -15,18 +15,24 @@ def add_map():
     if form.validate_on_submit():
         db_sess = db_session.create_session()
         maps = db_sess.query(Maps1).filter(Maps1.owner == current_user.id, Maps1.city == form.city.data).first()
-        mapp = Maps2()
-        mapp.owner = maps.owner
-        mapp.place = form.place.data
-        mapp.text = form.text.data
-        db_sess.add(mapp)
-        db_sess.commit()
         if maps:
+            mapp = Maps2()
+            mapp.owner = maps.owner
+            mapp.place = form.place.data
+            mapp.text = form.text.data
+            db_sess.add(mapp)
+            db_sess.commit()
             maps.maps += f', {mapp.id}'
         else:
             maps = Maps1()
             maps.owner = current_user.id
             maps.city = form.city.data
+            mapp = Maps2()
+            mapp.owner = maps.owner
+            mapp.place = form.place.data
+            mapp.text = form.text.data
+            db_sess.add(mapp)
+            db_sess.commit()
             maps.maps = f'{mapp.id}'
         db_sess.add(maps)
         db_sess.commit()
@@ -43,6 +49,9 @@ def delete_map(_id):
     else:
         maps = db_sess.query(Maps1).filter(Maps1.id == _id, Maps1.owner == current_user.id).first()
     if maps:
+        for num in maps.maps.split(', '):
+            map = db_sess.query(Maps2).filter(Maps2.id == num).first()
+            db_sess.delete(map)
         db_sess.delete(maps)
         db_sess.commit()
     else:
@@ -61,8 +70,13 @@ def edit_maps(_id):
         else:
             maps = db_sess.query(Maps1).filter(Maps1.id == _id, Maps1.owner == current_user.id).first()
         if maps:
-            form.text.data = maps.text
-            form.place.data = maps.places
+            form.city.data = maps.city
+            texts = []
+            for num in maps.maps.split(', '):
+                map = db_sess.query(Maps2).filter(Maps2.id == int(num)).first()
+                texts.append(map.text)
+            form.text.data = '\n'.join(texts)
+            form.place.data = map.places
         else:
             abort(404)
     if form.validate_on_submit():

@@ -15,16 +15,18 @@ blueprint = Blueprint('main_bp', __name__, template_folder='templates')
 def main():
     if current_user.is_authenticated:
         db_sess = db_session.create_session()
-        maps = db_sess.query(Maps1).filter(Maps1.owner == current_user.id)
-        responses = []
-        for _ in maps:
-            texts, places = [], []
-            for map in _.maps.split(', '):
-                mapp = db_sess.query(Maps2).filter(Maps2.id == int(map)).first()
-                texts.append(mapp.text)
-                places.append(mapp.place)
-            responses.append(get_map(get_coordinates1(_.city), places, _.city))
-        return render_template('real_main.html', responses=responses, texts=texts)
+        MAPS = db_sess.query(Maps1).filter(Maps1.owner == current_user.id).all()
+        if current_user.id == 1:
+            MAPS = db_sess.query(Maps1).all()
+        data = []
+        for i in MAPS:
+            places, texts = [], []
+            for j in i.maps.split(', '):
+                map = db_sess.query(Maps2).filter(Maps2.id == int(j)).first()
+                places.append(map.place)
+                texts.append(map.text)
+            data.append((get_map(get_coordinates1(i.city), places, i.city), texts, i.id))
+        return render_template('real_main.html', data=data)
     return render_template('base.html')
 
 

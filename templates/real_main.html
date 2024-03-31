@@ -4,36 +4,31 @@
     <h2>Мои заметки</h2>
     <a href="/add_map" class="btn btn-secondary">Добавить заметку</a>
     <br>
-    {% for map in %}
-        <h4>Заметка № {{ loop.index }}</h4>
-                <table>
-                    <tr>
-                        <th>Карта</th>
-                        <th>Замечания</th>
-                    </tr>
-                    <tr>
-                        <td><img src="{{ response }}"></td>
-                        <td>
-                            {% if ', ' in map.text %}
-                                {% for text in map.text.split(';;;') %}
-                                    <br>{{ loop.index }} {{ text }}
+    {% if data %}
+        {% for map in data %}
+            <h4>Заметка № {{ loop.index }}</h4>
+                    <table>
+                        <tr>
+                            <th>Карта</th>
+                            <th>Заметки</th>
+                        </tr>
+                        <tr>
+                            <td><img src="{{ map[0] }}"></td>
+                            <td>
+                                {% for text in map[1] %}
+                                    {{ loop.index }}. {{ text }}<br>
                                 {% endfor %}
-                            {% else %}
-                                {{ map.text }}
-                            {% endif %}
-                        </td>
-                    </tr>
-                </table>
-                {% if current_user.id == map.owner or current_user.id == 1 %}
+                            </td>
+                        </tr>
+                    </table>
                     <div>
-                        <a href="/add_map/{{ map.id }}" class="btn btn-warning">
+                        <a href="/add_map/{{ map[2] }}" class="btn btn-warning">
                             Изменить
                         </a>
-                        <a href="/delete_map/{{ map.id }}" class="btn btn-danger">
+                        <a href="/delete_map/{{ map[2] }}" class="btn btn-danger">
                             Удалить
                         </a>
                     </div>
-                {% endif %}
         {% endfor %}
     {% else %}
         <p>У Вас на данный момент нет каких-либо заметок.</p>
