@@ -9,7 +9,7 @@
 </head>
 <body>
     <header>
-        <img src="{{ url_for('static', filename='images/icon.png') }}" width="45">
+        <img src="{{ url_for('static', filename='images/icon.png') }}" class="logo">
         <h1>rememberGO</h1>
         <nav>
             {% if current_user.is_authenticated %}

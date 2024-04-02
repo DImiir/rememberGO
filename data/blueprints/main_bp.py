@@ -1,4 +1,3 @@
-import requests
 from flask import redirect, render_template, Blueprint
 from flask_login import login_user, current_user, login_required, logout_user
 from data.__all_models import LoginForm, RegisterForm, User
@@ -6,6 +5,8 @@ from data import db_session
 
 from data.maps_head import Maps1
 from data.maps_body import Maps2
+
+import requests
 
 blueprint = Blueprint('main_bp', __name__, template_folder='templates')
 
@@ -25,7 +26,7 @@ def main():
                 map = db_sess.query(Maps2).filter(Maps2.id == int(j)).first()
                 places.append(map.place)
                 texts.append(map.text)
-            data.append((get_map(get_coordinates1(i.city), places, i.city), texts, i.id))
+            data.append((get_map(get_coordinates1(i.city), places, i.city), texts, i.id, i.city))
         return render_template('real_main.html', data=data)
     return render_template('base.html')
 
@@ -111,5 +112,3 @@ def get_map(ll, places, city):
     map_api_server = "http://static-maps.yandex.ru/1.x/?apikey=fbd7d1f6-f3ac-4002-91a2-cc0552631701&size=300,300&l=map&"
     response = f'{map_api_server}ll={map_params["ll"]}&pt={map_params["pt"]}'
     return response
-
-

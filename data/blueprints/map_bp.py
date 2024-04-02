@@ -1,4 +1,3 @@
-import requests
 from flask import redirect, render_template, Blueprint, abort, request
 from flask_login import login_required, current_user
 from data.__all_models import Maps1, MapForm, Maps2

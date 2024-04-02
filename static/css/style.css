@@ -34,3 +34,29 @@ main {
 table {
     word-break: break-all;
 }
+
+div {
+    margin-top: 20px;
+}
+
+img {
+    border-radius: 10px;
+    border: 1px solid #000000;
+}
+
+.logo {
+    width: 50px;
+    border-radius: 0px;
+    border: None;
+}
+
+.create-line {
+    width: 100%;
+    border-top: 1px solid #000000;
+}
+
+td {
+    vertical-align: top;
+    padding: 5px;
+}
+

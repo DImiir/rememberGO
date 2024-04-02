@@ -6,29 +6,32 @@
     <br>
     {% if data %}
         {% for map in data %}
-            <h4>Заметка № {{ loop.index }}</h4>
-                    <table>
-                        <tr>
-                            <th>Карта</th>
-                            <th>Заметки</th>
-                        </tr>
-                        <tr>
-                            <td><img src="{{ map[0] }}"></td>
-                            <td>
-                                {% for text in map[1] %}
-                                    {{ loop.index }}. {{ text }}<br>
-                                {% endfor %}
-                            </td>
-                        </tr>
-                    </table>
-                    <div>
-                        <a href="/add_map/{{ map[2] }}" class="btn btn-warning">
-                            Изменить
-                        </a>
-                        <a href="/delete_map/{{ map[2] }}" class="btn btn-danger">
-                            Удалить
-                        </a>
-                    </div>
+            <div class="create-line"></div>
+            <div class="mapdiv">
+                <h4>Заметка № {{ loop.index }}. {{ map[-1] }}</h4>
+                        <table>
+                            <tr>
+                                <th>Карта</th>
+                                <th>Заметки</th>
+                            </tr>
+                            <tr>
+                                <td><img src="{{ map[0] }}"></td>
+                                <td>
+                                    {% for text in map[1] %}
+                                        {{ loop.index }}. {{ text }}<br>
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="buttons_map">
+                            <a href="/add_map/{{ map[2] }}" class="btn btn-warning">
+                                Изменить
+                            </a>
+                            <a href="/delete_map/{{ map[2] }}" class="btn btn-danger">
+                                Удалить
+                            </a>
+                        </div>
+            </div>
         {% endfor %}
     {% else %}
         <p>У Вас на данный момент нет каких-либо заметок.</p>
