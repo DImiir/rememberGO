@@ -23,5 +23,13 @@ class MapForm(FlaskForm):
     city = StringField('Населённый пункт')
     place = StringField('Место')
     text = StringField('Текст заметки')
+    type = BooleanField('Посещено ?')
+    submit = SubmitField('submit')
+
+
+class MapChangeForm(FlaskForm):
+    place = StringField('Место')
+    text = StringField('Текст заметки')
+    type = BooleanField('Посещено ?')
     submit = SubmitField('submit')
 

@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <title>{{ title }}</title>
+    <h1>{{ title }}</h1>
+    {% for map in maps %}
+        <a href="/change_map/{{ map }}" class="btn btn-secondary">Заметка №{{ map }}</a>
+    {% endfor %}
+{% endblock %}
