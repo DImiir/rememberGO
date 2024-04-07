@@ -9,7 +9,7 @@ class Maps2(SqlAlchemyBase, SerializerMixin):
 
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
     owner = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("mapsH.owner"))
-    place = sqlalchemy.Column(sqlalchemy.String)
+    place = sqlalchemy.Column(sqlalchemy.String, nullable=False)
     text = sqlalchemy.Column(sqlalchemy.String)
     type = sqlalchemy.Column(sqlalchemy.Boolean)
 

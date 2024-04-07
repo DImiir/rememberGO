@@ -1,39 +1,45 @@
 from flask import redirect, render_template, Blueprint, abort, request
 from flask_login import login_required, current_user
-from data.__all_models import Maps1, MapForm, Maps2
+from data.__all_models import *
 from data import db_session
 
 
 blueprint = Blueprint('map_bp', __name__, template_folder='templates')
 
 
-@blueprint.route('/add_map', methods=['GET', 'POST'])
+@blueprint.route('/add_map_kit', methods=['GET', 'POST'])
 @login_required
-def add_map():
-    form = MapForm()
+def add_map_kit():
+    form = MapHeadForm()
     if form.validate_on_submit():
         db_sess = db_session.create_session()
-        maps = db_sess.query(Maps1).filter(Maps1.owner == current_user.id, Maps1.city == form.city.data).first()
-        if maps:
-            mapp = Maps2()
-            mapp.owner = maps.owner
-            mapp.place = form.place.data
-            mapp.text = form.text.data
-            mapp.type = form.type.data
-            db_sess.add(mapp)
-            db_sess.commit()
+        maps = Maps1()
+        maps.owner = current_user.id
+        maps.city = form.city.data
+        maps.name = form.name.data
+        db_sess.add(maps)
+        db_sess.commit()
+        return redirect('/')
+    return render_template('mapadd.html', title='Добавление набора заметок', form=form)
+
+
+@blueprint.route('/add_map/<name>', methods=['GET', 'POST'])
+@login_required
+def add_map(name):
+    form = MapBodyForm()
+    if form.validate_on_submit():
+        db_sess = db_session.create_session()
+        maps = db_sess.query(Maps1).filter(Maps1.owner == current_user.id, Maps1.name == name).first()
+        mapp = Maps2()
+        mapp.owner = maps.owner
+        mapp.place = form.place.data
+        mapp.text = form.text.data
+        mapp.type = form.type.data
+        db_sess.add(mapp)
+        db_sess.commit()
+        if maps.maps:
             maps.maps += f', {mapp.id}'
         else:
-            maps = Maps1()
-            maps.owner = current_user.id
-            maps.city = form.city.data
-            mapp = Maps2()
-            mapp.owner = maps.owner
-            mapp.place = form.place.data
-            mapp.text = form.text.data
-            mapp.type = form.type.data
-            db_sess.add(mapp)
-            db_sess.commit()
             maps.maps = f'{mapp.id}'
         db_sess.add(maps)
         db_sess.commit()

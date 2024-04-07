@@ -2,13 +2,13 @@
 
 {% block content %}
     <h2>Мои заметки</h2>
-    <a href="/add_map" class="btn btn-secondary">Добавить заметку</a>
+    <a href="/add_map_kit" class="btn btn-secondary">Добавить набор заметок</a>
     <br>
     {% if data %}
         {% for map in data %}
             <div class="create-line"></div>
             <div class="mapdiv">
-                <h4>Заметка № {{ loop.index }}. {{ map[-1] }}</h4>
+                <h4>Заметка № {{ loop.index }}. {{ map[2].name }}</h4>
                         <table>
                             <tr>
                                 <th>Карта</th>
@@ -17,17 +17,20 @@
                             <tr>
                                 <td><img src="{{ map[0] }}"></td>
                                 <td>
-                                    {% for text in map[1] %}
-                                        {{ loop.index }}. {{ text }}<br>
+                                    {% for info in map[1] %}
+                                        {{ loop.index }}. {{ info.place }}. {{ info.text }}<br>
                                     {% endfor %}
                                 </td>
                             </tr>
                         </table>
                         <div class="buttons_map">
-                            <a href="/choose_map/{{ map[2] }}" class="btn btn-warning">
+                            <a href="/add_map/{{ map[2].name }}" class="btn btn-secondary">
+                                Добавить заметку
+                            </a>
+                            <a href="/choose_map/{{ map[2].id }}" class="btn btn-warning">
                                 Изменить
                             </a>
-                            <a href="/delete_map/{{ map[2] }}" class="btn btn-danger">
+                            <a href="/delete_map/{{ map[2].id }}" class="btn btn-danger">
                                 Удалить
                             </a>
                         </div>

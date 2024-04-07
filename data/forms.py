@@ -16,20 +16,25 @@ class RegisterForm(FlaskForm):
     email = EmailField('Почта', validators=[InputRequired()])
     password = PasswordField('Пароль', validators=[InputRequired()])
     password_again = PasswordField('Ещё раз пароль', validators=[InputRequired()])
-    submit = SubmitField('submit')
+    submit = SubmitField('Подтвердить')
 
 
-class MapForm(FlaskForm):
-    city = StringField('Населённый пункт')
-    place = StringField('Место')
+class MapHeadForm(FlaskForm):
+    city = StringField('Населённый пункт', validators=[InputRequired()])
+    name = StringField('Названия заметки', validators=[InputRequired()])
+    submit = SubmitField('Подтвердить')
+
+
+class MapBodyForm(FlaskForm):
+    place = StringField('Место', validators=[InputRequired()])
     text = StringField('Текст заметки')
     type = BooleanField('Посещено ?')
-    submit = SubmitField('submit')
+    submit = SubmitField('Подтвердить')
 
 
 class MapChangeForm(FlaskForm):
-    place = StringField('Место')
+    place = StringField('Место', validators=[InputRequired()])
     text = StringField('Текст заметки')
     type = BooleanField('Посещено ?')
-    submit = SubmitField('submit')
+    submit = SubmitField('Подтвердить')
 

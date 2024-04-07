@@ -21,12 +21,13 @@ def main():
             MAPS = db_sess.query(Maps1).all()
         data = []
         for i in MAPS:
-            places, texts = [], []
-            for j in i.maps.split(', '):
-                map = db_sess.query(Maps2).filter(Maps2.id == int(j)).first()
-                places.append(map.place)
-                texts.append(map.text)
-            data.append((get_map(get_coordinates1(i.city), places, i.city), texts, i.id, i.city))
+            places_types, maps = [], []
+            if i.maps:
+                for j in i.maps.split(', '):
+                    map = db_sess.query(Maps2).filter(Maps2.id == int(j)).first()
+                    maps.append(map)
+                    places_types.append((map.place, map.type))
+            data.append((get_map(get_coordinates1(i.city), places_types, i.city), maps, i))
         return render_template('real_main.html', data=data)
     return render_template('base.html')
 
@@ -106,9 +107,12 @@ def get_coordinates2(place_name):
 
 
 def get_map(ll, places, city):
-    map_params = {"ll": ",".join([str(ll[0]), str(ll[1])]), 'l': 'map',
-                  "pt": "~".join([get_coordinates2(f'{city},{point}') + f',pmwtm{num + 1}'
-                                  for num, point in enumerate(places)])}
+    points = []
+    for num, point in enumerate(places):
+        points.append(get_coordinates2(f'{city},{point[0]}') + f',pmwtm{num + 1}')
+        if point[1]:
+            points.append(get_coordinates2(f'{city},{point[0]}') + f',pmgrm{num + 1}')
+    map_params = {"ll": ",".join([str(ll[0]), str(ll[1])]), 'l': 'map', "pt": '~'.join(points)}
     map_api_server = "http://static-maps.yandex.ru/1.x/?apikey=fbd7d1f6-f3ac-4002-91a2-cc0552631701&size=300,300&l=map&"
     response = f'{map_api_server}ll={map_params["ll"]}&pt={map_params["pt"]}'
     return response
