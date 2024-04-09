@@ -35,11 +35,11 @@ table {
     word-break: break-all;
 }
 
-div {
+.mapdiv {
     margin-top: 20px;
 }
 
-img {
+.map {
     border-radius: 10px;
     border: 1px solid #000000;
 }
@@ -53,6 +53,7 @@ img {
 .create-line {
     width: 100%;
     border-top: 1px solid #000000;
+    margin-top: 20px;
 }
 
 td {
@@ -60,7 +61,33 @@ td {
     padding: 5px;
 }
 
-.btn {
+.choose_btn {
     margin: 10px;
 }
 
+.buttons_mapv:not(:first-child)  {
+    margin-top: 0px;
+    margin-left: 10px;
+}
+
+.link_main {
+    color: black;
+    text-decoration: none;
+}
+
+footer {
+    width: auto;
+    background: white;
+    height: 400px;
+    box-shadow: 0 0 10px #9a9a9a6e;
+    margin-top: 100px;
+}
+
+.map_background {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 100vh;
+}

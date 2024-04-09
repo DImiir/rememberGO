@@ -1,42 +1,48 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h2>Мои заметки</h2>
-    <a href="/add_map_kit" class="btn btn-secondary">Добавить набор заметок</a>
-    <br>
-    {% if data %}
-        {% for map in data %}
-            <div class="create-line"></div>
-            <div class="mapdiv">
-                <h4>Заметка № {{ loop.index }}. {{ map[2].name }}</h4>
-                        <table>
-                            <tr>
-                                <th>Карта</th>
-                                <th>Заметки</th>
-                            </tr>
-                            <tr>
-                                <td><img src="{{ map[0] }}"></td>
-                                <td>
-                                    {% for info in map[1] %}
-                                        {{ loop.index }}. {{ info.place }}. {{ info.text }}<br>
-                                    {% endfor %}
-                                </td>
-                            </tr>
-                        </table>
-                        <div class="buttons_map">
-                            <a href="/add_map/{{ map[2].name }}" class="btn btn-secondary">
-                                Добавить заметку
-                            </a>
-                            <a href="/choose_map/{{ map[2].id }}" class="btn btn-warning">
-                                Изменить
-                            </a>
-                            <a href="/delete_map/{{ map[2].id }}" class="btn btn-danger">
-                                Удалить
-                            </a>
-                        </div>
-            </div>
-        {% endfor %}
-    {% else %}
-        <p>У Вас на данный момент нет каких-либо заметок.</p>
-    {% endif %}
+    <div class="container">
+        <h2>Мои заметки</h2>
+        <a href="/add_map_kit" class="btn btn-secondary">Добавить набор заметок</a>
+        <br>
+        {% if data %}
+            {% for map in data %}
+                <div class="create-line"></div>
+                <div class="mapdiv">
+                    <h4>Заметка № {{ loop.index }}. {{ map[2].name }}</h4>
+                            <table>
+                                <tr>
+                                    <th>Карта</th>
+                                    <th>Заметки</th>
+                                </tr>
+                                <tr>
+                                    <td><img class="map" src="{{ map[0] }}"></td>
+                                    <td>
+                                        {% for info in map[1] %}
+                                            {{ loop.index }}. {{ info.place }}. {{ info.text }}<br>
+                                        {% endfor %}
+                                    </td>
+                                </tr>
+                            </table>
+                            <div class="buttons_map">
+                                <a href="/add_map/{{ map[2].name }}" class="btn btn-secondary">
+                                    Добавить заметку
+                                </a>
+                                <a href="/choose_map/{{ map[2].id }}" class="btn btn-warning">
+                                    Изменить
+                                </a>
+                                <a href="/delete_map/{{ map[2].id }}" class="btn btn-danger">
+                                    Удалить
+                                </a>
+                            </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>У Вас на данный момент нет каких-либо заметок.</p>
+            <img class="map_background" src="https://i.gifer.com/embedded/download/W9Xs.gif">
+        {% endif %}
+    </div>
+    <footer>
+
+    </footer>
 {% endblock %}
