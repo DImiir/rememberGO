@@ -5,7 +5,7 @@
         <title>{{ title }}</title>
         <h1>{{ title }}</h1>
         {% for map in maps %}
-            <a href="/change_map/{{ map }}" class="btn btn-secondary choose_btn">Заметка №{{ loop.index }}</a>
+            <a href="/change_map/{{ map.id }}" class="btn btn-secondary choose_btn">Заметка №{{ loop.index }}</a>
     {% endfor %}
     </div>
 {% endblock %}

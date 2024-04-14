@@ -1,11 +1,7 @@
 from flask import redirect, render_template, Blueprint
 from flask_login import login_user, current_user, login_required, logout_user
-from data.__all_models import LoginForm, RegisterForm, User
+from data.__all_models import *
 from data import db_session
-
-from data.maps_head import Maps1
-from data.maps_body import Maps2
-
 import requests
 
 blueprint = Blueprint('main_bp', __name__, template_folder='templates')
@@ -13,23 +9,27 @@ blueprint = Blueprint('main_bp', __name__, template_folder='templates')
 
 @blueprint.route('/')
 @blueprint.route('/main')
-def main():
+@blueprint.route('/main/kits')
+def main_kits():
     if current_user.is_authenticated:
         db_sess = db_session.create_session()
         MAPS = db_sess.query(Maps1).filter(Maps1.owner == current_user.id).all()
-        if current_user.id == 1:
-            MAPS = db_sess.query(Maps1).all()
         data = []
-        for i in MAPS:
-            places_types, maps = [], []
-            if i.maps:
-                for j in i.maps.split(', '):
-                    map = db_sess.query(Maps2).filter(Maps2.id == int(j)).first()
-                    maps.append(map)
-                    places_types.append((map.place, map.type))
-            data.append((get_map(get_coordinates1(i.city), places_types, i.city), maps, i))
-        return render_template('real_main.html', data=data)
+        for map in MAPS:
+            data.append((get_map1(get_coordinates1(map.city), map), map))
+        return render_template('main_kits.html', data=data)
     return render_template('base.html')
+
+
+@blueprint.route('/main/notes')
+def main_notes():
+    db_sess = db_session.create_session()
+    MAPS = db_sess.query(Maps1).filter(Maps1.owner == current_user.id)
+    data = {}
+    for map in MAPS:
+        for note in map.maps:
+            data[note.id] = [get_map2(get_coordinates2(note.place), note, map.city), note, note.images]
+    return render_template('main_notes.html', data=data)
 
 
 @blueprint.route('/main/register', methods=['GET', 'POST'])
@@ -89,30 +89,31 @@ def get_coordinates1(address):
 def get_coordinates2(place_name):
     api_key = 'dda3ddba-c9ea-4ead-9010-f43fbc15c6e3'
     url = f'https://search-maps.yandex.ru/v1/?text={place_name}&type=biz&lang=ru_RU&apikey={api_key}'
-    try:
-        response = requests.get(url)
-        data = response.json()
-        if response.status_code == 200 and 'features' in data:
-            if data['features']:
-                coordinates = data['features'][0]['geometry']['coordinates']
-                return f'{coordinates[::-1][1]},{coordinates[::-1][0]}'
-            else:
-                return None
+    response = requests.get(url)
+    data = response.json()
+    if response.status_code == 200 and 'features' in data:
+        if data['features']:
+            coordinates = data['features'][0]['geometry']['coordinates']
+            return f'{coordinates[::-1][1]},{coordinates[::-1][0]}'
         else:
-            print("Ошибка при получении данных:", data)
             return None
-    except Exception as e:
-        print("Произошла ошибка при выполнении запроса:", e)
-        return None
 
 
-def get_map(ll, places, city):
+def get_map1(ll, maps):
     points = []
-    for num, point in enumerate(places):
-        points.append(get_coordinates2(f'{city},{point[0]}') + f',pmwtm{num + 1}')
-        if point[1]:
-            points.append(get_coordinates2(f'{city},{point[0]}') + f',pmgrm{num + 1}')
+    for num in range(len(maps.maps)):
+        points.append(f"{get_coordinates2(f'{maps.city},{maps.maps[num].place}')},pmwtm{num + 1}")
+        if maps.maps[num].type:
+            points.append(f"{get_coordinates2(f'{maps.city},{maps.maps[num].place}')},pmgrm{num + 1}")
     map_params = {"ll": ",".join([str(ll[0]), str(ll[1])]), 'l': 'map', "pt": '~'.join(points)}
     map_api_server = "http://static-maps.yandex.ru/1.x/?apikey=fbd7d1f6-f3ac-4002-91a2-cc0552631701&size=300,300&l=map&"
-    response = f'{map_api_server}ll={map_params["ll"]}&pt={map_params["pt"]}'
-    return response
+    return f'{map_api_server}ll={map_params["ll"]}&pt={map_params["pt"]}'
+
+
+def get_map2(ll, map, city):
+    point = f"{get_coordinates2(f'{city},{map.place}')},pmwtm"
+    if map.type:
+        point = f"{get_coordinates2(f'{city},{map.place}')},pmgrm"
+    map_params = {"ll": ll, 'l': 'map', "pt": point}
+    map_api_server = "http://static-maps.yandex.ru/1.x/?apikey=fbd7d1f6-f3ac-4002-91a2-cc0552631701&size=300,300&l=map&"
+    return f'{map_api_server}ll={map_params["ll"]}&pt={map_params["pt"]}'

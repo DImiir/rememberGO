@@ -37,10 +37,7 @@ def add_map(name):
         mapp.type = form.type.data
         db_sess.add(mapp)
         db_sess.commit()
-        if maps.maps:
-            maps.maps += f', {mapp.id}'
-        else:
-            maps.maps = f'{mapp.id}'
+        maps.maps.append(mapp)
         db_sess.add(maps)
         db_sess.commit()
         return redirect('/')
@@ -55,15 +52,10 @@ def delete_map(_id):
         maps = db_sess.query(Maps1).filter(Maps1.id == _id).first()
     else:
         maps = db_sess.query(Maps1).filter(Maps1.id == _id, Maps1.owner == current_user.id).first()
-    if maps:
-        if maps.maps:
-            for num in maps.maps.split(', '):
-                map = db_sess.query(Maps2).filter(Maps2.id == num).first()
-                db_sess.delete(map)
-        db_sess.delete(maps)
-        db_sess.commit()
-    else:
-        abort(404)
+    for map in maps.maps:
+        db_sess.delete(map)
+    db_sess.delete(maps)
+    db_sess.commit()
     return redirect('/')
 
 
@@ -72,10 +64,7 @@ def delete_map(_id):
 def edit_maps(_id):
     db_sess = db_session.create_session()
     map = db_sess.query(Maps1).filter(Maps1.id == _id).first()
-    maps = []
-    if map.maps:
-        maps = map.maps.split(', ')
-    return render_template('map_choose_change.html', title='Выбор заметки', maps=maps)
+    return render_template('map_choose_change.html', title='Выбор заметки', maps=map.maps)
 
 
 @blueprint.route('/change_map/<int:_id>', methods=['GET', 'POST'])

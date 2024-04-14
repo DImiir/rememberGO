@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="container">
+        <h2>Мои заметки</h2>
+        <a href="/add_map_note" class="btn btn-secondary">Добавить заметку</a>
+        <br>
+        {% if data %}
+            {% for map in data.values() %}
+                <div class="create-line"></div>
+                <div class="mapdiv">
+                    <h4>Заметка № {{ loop.index }}. {{ map[1].place }}</h4>
+                    <div>
+                        <div>
+                            <img src="{{ map[0] }}">
+                            <div id="carouselExample" class="carousel slide">
+                              <div class="carousel-inner">
+                                  {% for image in map[2] %}
+                                    <div class="carousel-item active">
+                                      <p class="d-block w-50">{{ image }}</p>
+                                    </div>
+                                    <div class="carousel-item">
+                                      <img src="..." class="d-block w-100" alt="...">
+                                    </div>
+                                    <div class="carousel-item">
+                                      <img src="..." class="d-block w-100" alt="...">
+                                    </div>
+                                  {% endfor %}
+                              </div>
+                              <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                              </button>
+                              <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                              </button>
+                            </div>
+                        </div>
+                        <p>{{ map[1].text }}</p>
+                    </div>
+                    <div class="buttons_map">
+                        <a href="/choose_map/{{ map[1].id }}" class="btn btn-warning">
+                            Изменить
+                        </a>
+                        <a href="/delete_map/{{ map[1].id }}" class="btn btn-danger">
+                            Удалить
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>У Вас на данный момент нет каких-либо заметок.</p>
+            <div class="map_background">
+                <img src="https://i.gifer.com/embedded/download/W9Xs.gif">
+            </div>
+        {% endif %}
+    </div>
+    <footer>
+        <a class="link_main" href="/"><img src="{{ url_for('static', filename='images/down_logo.png') }}" class="logo" width="500"></a>
+    </footer>
+{% endblock %}

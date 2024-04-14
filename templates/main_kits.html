@@ -2,14 +2,14 @@
 
 {% block content %}
     <div class="container">
-        <h2>Мои заметки</h2>
+        <h2>Мои наборы заметок</h2>
         <a href="/add_map_kit" class="btn btn-secondary">Добавить набор заметок</a>
         <br>
         {% if data %}
             {% for map in data %}
                 <div class="create-line"></div>
                 <div class="mapdiv">
-                    <h4>Заметка № {{ loop.index }}. {{ map[2].name }}</h4>
+                    <h4>Заметка № {{ loop.index }}. {{ map[1].name }}</h4>
                             <table>
                                 <tr>
                                     <th>Карта</th>
@@ -18,20 +18,20 @@
                                 <tr>
                                     <td><img class="map" src="{{ map[0] }}"></td>
                                     <td>
-                                        {% for info in map[1] %}
+                                        {% for info in map[1].maps %}
                                             {{ loop.index }}. {{ info.place }}. {{ info.text }}<br>
                                         {% endfor %}
                                     </td>
                                 </tr>
                             </table>
                             <div class="buttons_map">
-                                <a href="/add_map/{{ map[2].name }}" class="btn btn-secondary">
+                                <a href="/add_map/{{ map[1].name }}" class="btn btn-secondary">
                                     Добавить заметку
                                 </a>
-                                <a href="/choose_map/{{ map[2].id }}" class="btn btn-warning">
+                                <a href="/choose_map/{{ map[1].id }}" class="btn btn-warning">
                                     Изменить
                                 </a>
-                                <a href="/delete_map/{{ map[2].id }}" class="btn btn-danger">
+                                <a href="/delete_map/{{ map[1].id }}" class="btn btn-danger">
                                     Удалить
                                 </a>
                             </div>
@@ -39,10 +39,12 @@
             {% endfor %}
         {% else %}
             <p>У Вас на данный момент нет каких-либо заметок.</p>
-            <img class="map_background" src="https://i.gifer.com/embedded/download/W9Xs.gif">
+            <div class="map_background">
+                <img src="https://i.gifer.com/embedded/download/W9Xs.gif">
+            </div>
         {% endif %}
     </div>
     <footer>
-
+        <a class="link_main" href="/"><img src="{{ url_for('static', filename='images/down_logo.png') }}" class="logo" width="500"></a>
     </footer>
 {% endblock %}
