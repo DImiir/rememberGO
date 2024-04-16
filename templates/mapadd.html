@@ -24,6 +24,9 @@
                     {{ form.text.label }} (до 225 символов)<br>
                     {{ form.text(maxlength=225, class="form-control") }}<br>
                 </p>
+                {% if title == 'Редактирование заметки' %}
+                    <a class="btn btn-success" href="/add_image/{{ mapid }}">Добавить фото</a>
+                {% endif %}
                 <p>
                     {{ form.type() }} {{ form.type.label }}<br>
                 </p>

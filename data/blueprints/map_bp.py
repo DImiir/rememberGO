@@ -71,6 +71,7 @@ def edit_maps(_id):
 @login_required
 def change_maps(_id):
     form = MapBodyForm()
+    mapid = None
     if request.method == "GET":
         db_sess = db_session.create_session()
         maps = db_sess.query(Maps2).filter(Maps2.id == _id).first()
@@ -78,6 +79,7 @@ def change_maps(_id):
             form.text.data = maps.text
             form.place.data = maps.place
             form.type.data = maps.type
+            mapid = maps.id
         else:
             abort(404)
     if form.validate_on_submit():
@@ -91,4 +93,5 @@ def change_maps(_id):
             return redirect('/')
         else:
             abort(404)
-    return render_template('mapadd.html', title='Редактирование заметки', form=form)
+    return render_template('mapadd.html', title='Редактирование заметки', form=form, mapid=mapid)
+

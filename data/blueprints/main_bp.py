@@ -114,6 +114,6 @@ def get_map2(ll, map, city):
     point = f"{get_coordinates2(f'{city},{map.place}')},pmwtm"
     if map.type:
         point = f"{get_coordinates2(f'{city},{map.place}')},pmgrm"
-    map_params = {"ll": ll, 'l': 'map', "pt": point}
+    map_params = {"ll": ll, 'l': 'map', "pt": point, "z": 13}
     map_api_server = "http://static-maps.yandex.ru/1.x/?apikey=fbd7d1f6-f3ac-4002-91a2-cc0552631701&size=300,300&l=map&"
-    return f'{map_api_server}ll={map_params["ll"]}&pt={map_params["pt"]}'
+    return f'{map_api_server}ll={map_params["ll"]}&pt={map_params["pt"]}&z={map_params["z"]}'

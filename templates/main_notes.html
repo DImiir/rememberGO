@@ -3,7 +3,7 @@
 {% block content %}
     <div class="container">
         <h2>Мои заметки</h2>
-        <a href="/add_map_note" class="btn btn-secondary">Добавить заметку</a>
+        <a href="/add_map" class="btn btn-secondary">Добавить заметку</a>
         <br>
         {% if data %}
             {% for map in data.values() %}
@@ -12,7 +12,7 @@
                     <h4>Заметка № {{ loop.index }}. {{ map[1].place }}</h4>
                     <div>
                         <div>
-                            <img src="{{ map[0] }}">
+                            <img src="{{ map[0] }}" class="map">
                             <div id="carouselExample" class="carousel slide">
                               <div class="carousel-inner">
                                   {% for image in map[2] %}
@@ -40,7 +40,7 @@
                         <p>{{ map[1].text }}</p>
                     </div>
                     <div class="buttons_map">
-                        <a href="/choose_map/{{ map[1].id }}" class="btn btn-warning">
+                        <a href="/change_map/{{ map[1].id }}" class="btn btn-warning">
                             Изменить
                         </a>
                         <a href="/delete_map/{{ map[1].id }}" class="btn btn-danger">
