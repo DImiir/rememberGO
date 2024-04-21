@@ -16,6 +16,12 @@
                     {{ form.city(class="form-control") }}<br>
                 </p>
             {% else %}
+                {% if title == 'Добавление заметки' %}
+                    <p>
+                        {{ form.name.label }}<br>
+                        {{ form.name(class="form-control") }}<br>
+                    </p>
+                {% endif %}
                 <p>
                     {{ form.place.label }}<br>
                     {{ form.place(class="form-control") }}<br>
@@ -24,9 +30,6 @@
                     {{ form.text.label }} (до 225 символов)<br>
                     {{ form.text(maxlength=225, class="form-control") }}<br>
                 </p>
-                {% if title == 'Редактирование заметки' %}
-                    <a class="btn btn-success" href="/add_image/{{ mapid }}">Добавить фото</a>
-                {% endif %}
                 <p>
                     {{ form.type() }} {{ form.type.label }}<br>
                 </p>

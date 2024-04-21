@@ -1,6 +1,9 @@
 from flask_wtf import FlaskForm
-from wtforms.fields.simple import StringField, EmailField, PasswordField, BooleanField, SubmitField
+from wtforms.fields.choices import SelectField
+from wtforms.fields.simple import StringField, EmailField, PasswordField, BooleanField, SubmitField, FileField
 from wtforms.validators import InputRequired
+from flask_wtf.file import FileField, FileRequired, FileAllowed
+from main import photos
 
 
 class LoginForm(FlaskForm):
@@ -25,11 +28,15 @@ class MapHeadForm(FlaskForm):
     submit = SubmitField('Подтвердить')
 
 
-class MapBodyForm(FlaskForm):
+class MapBodyForm1(FlaskForm):
     place = StringField('Место', validators=[InputRequired()])
     text = StringField('Текст заметки')
     type = BooleanField('Посещено ?')
     submit = SubmitField('Подтвердить')
+
+
+class MapBodyForm2(MapBodyForm1):
+    name = SelectField('Название набора заметок', choices=[])
 
 
 class MapChangeForm(FlaskForm):
@@ -38,3 +45,8 @@ class MapChangeForm(FlaskForm):
     type = BooleanField('Посещено ?')
     submit = SubmitField('Подтвердить')
 
+
+class UploadForm(FlaskForm):
+    photo = FileField(validators=[FileAllowed(photos, 'Image only!'),
+                      FileRequired('File was empty!')])
+    submit = SubmitField('Upload')

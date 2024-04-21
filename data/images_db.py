@@ -9,5 +9,5 @@ class Images(SqlAlchemyBase, SerializerMixin):
 
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
     id_map = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("mapsB.id"))
-    image = sqlalchemy.Column(sqlalchemy.BLOB, default=None)
+    image = sqlalchemy.Column(sqlalchemy.String, default=None)
 

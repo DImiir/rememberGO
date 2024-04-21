@@ -28,12 +28,13 @@ def main_notes():
     data = {}
     for map in MAPS:
         for note in map.maps:
-            data[note.id] = [get_map2(get_coordinates2(note.place), note, map.city), note, note.images]
+            data[note.id] = [get_map2(get_coordinates2(note.place), note, map.city), note]
     return render_template('main_notes.html', data=data)
 
 
 @blueprint.route('/main/register', methods=['GET', 'POST'])
 def reqister():
+    from data.forms import RegisterForm
     form = RegisterForm()
     if form.validate_on_submit():
         if form.password.data != form.password_again.data:
@@ -59,6 +60,7 @@ def reqister():
 
 @blueprint.route('/main/login', methods=['GET', 'POST'])
 def login():
+    from data.forms import LoginForm
     form = LoginForm()
     if form.validate_on_submit():
         db_sess = db_session.create_session()

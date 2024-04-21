@@ -29,6 +29,7 @@ nav {
 
 main {
     margin-top: 128px;
+    word-wrap: break-word;
 }
 
 table {
@@ -89,4 +90,10 @@ footer {
     align-items: center;
     text-align: center;
     min-height: 100vh;
+}
+
+.note {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
 }
