@@ -13,6 +13,7 @@ header {
     flex-flow: row nowrap;
     justify-content: flex-start;
     align-items: center;
+    z-index: 1;
 }
 
 header h1 {
@@ -65,7 +66,7 @@ td {
     margin: 10px;
 }
 
-.buttons_mapv:not(:first-child)  {
+.buttons_toolsv:not(:first-child)  {
     margin-top: 0px;
     margin-left: 10px;
 }
@@ -96,4 +97,13 @@ footer {
     display: flex;
     flex-flow: row nowrap;
     justify-content: flex-start;
+}
+
+.slider img {
+    border-radius: 10px;
+    border: 1px solid #000000;
+}
+
+.note p {
+    padding-left: 5px;
 }
