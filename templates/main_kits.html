@@ -9,6 +9,9 @@
             {% for map in data %}
                 <div class="create-line"></div>
                 <div class="mapdiv">
+                    {% if current_user.id == 1 %}
+                        <h4>id набора заметок: {{ map[1].id }}</h4>
+                    {% endif %}
                     <h4>Заметка № {{ loop.index }}. {{ map[1].name }}</h4>
                             <table>
                                 <tr>

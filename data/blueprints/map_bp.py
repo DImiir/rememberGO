@@ -81,11 +81,27 @@ def delete_map(_id):
         maps = db_sess.query(Maps1).filter(Maps1.id == _id).first()
     else:
         maps = db_sess.query(Maps1).filter(Maps1.id == _id, Maps1.owner == current_user.id).first()
-    for map in maps.maps:
-        db_sess.delete(map)
+    if maps.maps:
+        for map in maps.maps:
+            db_sess.delete(map)
     db_sess.delete(maps)
     db_sess.commit()
     return redirect('/')
+
+
+@blueprint.route('/delete_note/<int:_id>', methods=['GET', 'POST'])
+@login_required
+def delete_note(_id):
+    db_sess = db_session.create_session()
+    if current_user.id == 1:
+        note = db_sess.query(Maps2).filter(Maps2.id == _id).first()
+    else:
+        note = db_sess.query(Maps2).filter(Maps2.id == _id, Maps2.head == current_user.id).first()
+    map = db_sess.query(Maps1).filter(Maps1.id == note.head).first()
+    map.maps.remove(note)
+    db_sess.delete(note)
+    db_sess.commit()
+    return redirect('/main/notes')
 
 
 @blueprint.route('/choose_map/<int:_id>')

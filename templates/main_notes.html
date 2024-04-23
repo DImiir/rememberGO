@@ -6,9 +6,12 @@
         <a href="/add_note" class="btn btn-secondary">Добавить заметку</a>
         <br>
         {% if data %}
-            {% for map in data.values() %}
+            {% for map in data %}
                 <div class="create-line"></div>
                 <div class="mapdiv">
+                    {% if current_user.id == 1 %}
+                        <h4>id заметки: {{ map[1].id }}</h4>
+                    {% endif %}
                     <h4>Заметка № {{ loop.index }}. {{ map[1].place }}</h4>
                     {% if map[1].images %}
                         <div id="carouselExampleDark" class="carousel carousel-dark slide">
@@ -49,7 +52,7 @@
                         <a href="/change_map/{{ map[1].id }}" class="btn btn-warning">
                             Изменить
                         </a>
-                        <a href="/delete_map/{{ map[1].id }}" class="btn btn-danger">
+                        <a href="/delete_note/{{ map[1].id }}" class="btn btn-danger">
                             Удалить
                         </a>
                         <a href="/add_image/{{ map[1].id }}" class="btn btn-success">

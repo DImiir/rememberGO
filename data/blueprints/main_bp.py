@@ -14,6 +14,8 @@ def main_kits():
     if current_user.is_authenticated:
         db_sess = db_session.create_session()
         MAPS = db_sess.query(Maps1).filter(Maps1.owner == current_user.id).all()
+        if current_user.id == 1:
+            MAPS = db_sess.query(Maps1).filter().all()
         data = []
         for map in MAPS:
             data.append((get_map1(get_coordinates1(map.city), map), map))
@@ -25,10 +27,12 @@ def main_kits():
 def main_notes():
     db_sess = db_session.create_session()
     MAPS = db_sess.query(Maps1).filter(Maps1.owner == current_user.id)
-    data = {}
+    if current_user.id == 1:
+        MAPS = db_sess.query(Maps1).filter().all()
+    data = []
     for map in MAPS:
         for note in map.maps:
-            data[note.id] = [get_map2(get_coordinates2(note.place), note, map.city), note]
+            data.append((get_map2(get_coordinates2(note.place), note, map.city), note))
     return render_template('main_notes.html', data=data)
 
 
