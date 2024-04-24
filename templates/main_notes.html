@@ -13,6 +13,25 @@
                         <h4>id заметки: {{ map[1].id }}</h4>
                     {% endif %}
                     <h4>Заметка № {{ loop.index }}. {{ map[1].place }}</h4>
+                    <table>
+                        <tr>
+                            <td class="note">
+                                <img src="{{ map[0] }}" class="map" width="300">
+                                <p>{{ map[1].text }}</p>
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="buttons_tools">
+                        <a href="/change_map/{{ map[1].id }}" class="btn btn-warning">
+                            Изменить
+                        </a>
+                        <a href="/delete_note/{{ map[1].id }}" class="btn btn-danger">
+                            Удалить
+                        </a>
+                        <a href="/add_image/{{ map[1].id }}" class="btn btn-success">
+                            Добавить картинку
+                        </a>
+                    </div>
                     {% if map[1].images %}
                         <div id="carouselExampleDark" class="carousel carousel-dark slide">
                             <div class="slider">
@@ -40,25 +59,6 @@
                             </button>
                         </div>
                     {% endif %}
-                    <table>
-                        <tr>
-                            <td class="note">
-                                <img src="{{ map[0] }}" class="map" width="300">
-                                <p>{{ map[1].text }}</p>
-                            </td>
-                        </tr>
-                    </table>
-                    <div class="buttons_tools">
-                        <a href="/change_map/{{ map[1].id }}" class="btn btn-warning">
-                            Изменить
-                        </a>
-                        <a href="/delete_note/{{ map[1].id }}" class="btn btn-danger">
-                            Удалить
-                        </a>
-                        <a href="/add_image/{{ map[1].id }}" class="btn btn-success">
-                            Добавить картинку
-                        </a>
-                    </div>
                 </div>
             {% endfor %}
         {% else %}

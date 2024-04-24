@@ -1,19 +1,16 @@
 {% extends "base.html" %}
 
 {% block content %}
-     <title>Загрузка изображения</title>
-     <h1>Загрузка изображения</h1>
-     <form method="POST" enctype="multipart/form-data">
-          {{ form.hidden_tag() }}
-          {{ form.photo }}
-          {% for error in form.photo.errors %}
-              <span style="color: red;">{{ error }}</span>
-          {% endfor %}
-          {{ form.submit }}
-     </form>
-
-     {% if file_url %}
-     <br>
-     <img src="{{ file_url }}">
-     {% endif %}
+     <div class="container">
+          <title>Загрузка изображения</title>
+          <h1>Загрузка изображения</h1>
+          <form method="POST" enctype="multipart/form-data">
+               {{ form.hidden_tag() }}
+               {{ form.photo }}
+               {% for error in form.photo.errors %}
+                   <span style="color: red;">{{ error }}</span>
+               {% endfor %}
+               {{ form.submit }}
+          </form>
+     </div>
 {% endblock %}

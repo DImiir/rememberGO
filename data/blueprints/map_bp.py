@@ -36,7 +36,7 @@ def add_map(name):
         db_sess = db_session.create_session()
         maps = db_sess.query(Maps1).filter(Maps1.owner == current_user.id, Maps1.name == name).first()
         mapp = Maps2()
-        mapp.owner = maps.owner
+        mapp.owner = current_user.id
         mapp.place = form.place.data
         mapp.text = form.text.data
         mapp.type = form.type.data
@@ -57,8 +57,11 @@ def add_note():
     MAPS = db_sess.query(Maps1).filter(Maps1.owner == current_user.id).all()
     form = MapBodyForm2()
     form.name.choices = [(i.name, i.name) for i in MAPS]
+    form.name.choices.insert(0, ('-', '-'))
+    maps = None
     if form.validate_on_submit():
-        maps = db_sess.query(Maps1).filter(Maps1.owner == current_user.id, Maps1.name == form.name.data).first()
+        if form.name.data != '-':
+            maps = db_sess.query(Maps1).filter(Maps1.owner == current_user.id, Maps1.name == form.name.data).first()
         mapp = Maps2()
         mapp.owner = current_user.id
         mapp.place = form.place.data
@@ -66,9 +69,10 @@ def add_note():
         mapp.type = form.type.data
         db_sess.add(mapp)
         db_sess.commit()
-        maps.maps.append(mapp)
-        db_sess.add(maps)
-        db_sess.commit()
+        if form.name.data != '-':
+            maps.maps.append(mapp)
+            db_sess.add(maps)
+            db_sess.commit()
         return redirect('/')
     return render_template('mapadd.html', title='Добавление заметки', form=form)
 
@@ -96,9 +100,10 @@ def delete_note(_id):
     if current_user.id == 1:
         note = db_sess.query(Maps2).filter(Maps2.id == _id).first()
     else:
-        note = db_sess.query(Maps2).filter(Maps2.id == _id, Maps2.head == current_user.id).first()
-    map = db_sess.query(Maps1).filter(Maps1.id == note.head).first()
-    map.maps.remove(note)
+        note = db_sess.query(Maps2).filter(Maps2.id == _id, Maps2.owner == current_user.id).first()
+    if note.head:
+        map = db_sess.query(Maps1).filter(Maps1.id == note.head).first()
+        map.maps.remove(note)
     db_sess.delete(note)
     db_sess.commit()
     return redirect('/main/notes')

@@ -66,12 +66,16 @@ td {
     margin: 10px;
 }
 
+.buttons_tools {
+    margin-bottom: 10px;
+}
+
 .buttons_toolsv:not(:first-child)  {
     margin-top: 0px;
     margin-left: 10px;
 }
 
-.link_main {
+a {
     color: black;
     text-decoration: none;
 }
@@ -99,11 +103,27 @@ footer {
     justify-content: flex-start;
 }
 
+.slider {
+    display: grid;
+}
+
 .slider img {
+    margin: auto;
     border-radius: 10px;
     border: 1px solid #000000;
+    max-width: 60%;
 }
 
 .note p {
     padding-left: 5px;
+}
+
+.footer-div {
+    display: flex;
+    margin-right: 5%;
+    margin-left: 5%;
+}
+
+.footer-minidiv {
+    width: 100%;
 }
