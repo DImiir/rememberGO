@@ -3,9 +3,10 @@ import os
 
 from flask import redirect, render_template, Blueprint, abort, request
 from flask_login import login_required, current_user
-from data.__all_models import *
 
-from main import db_session
+from data.__all_models import *
+from data.blueprints.main_bp import get_map1, get_map2, get_coordinates1, get_coordinates2
+from server import db_session
 
 blueprint = Blueprint('map_bp', __name__, template_folder='templates')
 
@@ -21,6 +22,8 @@ def add_map_kit():
         maps.owner = current_user.id
         maps.city = form.city.data
         maps.name = form.name.data
+        if not get_map1(get_coordinates1(maps.city), maps)[0]:
+            render_template('error.html', error=get_map1(get_coordinates1(maps.city), maps)[1])
         db_sess.add(maps)
         db_sess.commit()
         return redirect('/')
@@ -40,6 +43,8 @@ def add_map(name):
         mapp.place = form.place.data
         mapp.text = form.text.data
         mapp.type = form.type.data
+        if not get_map2(get_coordinates2(mapp.place), mapp)[0]:
+            render_template('error.html', error=get_map2(get_coordinates2(mapp.place), mapp)[1])
         db_sess.add(mapp)
         db_sess.commit()
         maps.maps.append(mapp)
@@ -67,6 +72,8 @@ def add_note():
         mapp.place = form.place.data
         mapp.text = form.text.data
         mapp.type = form.type.data
+        if not get_map2(get_coordinates2(mapp.place), mapp)[0]:
+            render_template('error.html', error=get_map2(get_coordinates2(mapp.place), mapp)[1])
         db_sess.add(mapp)
         db_sess.commit()
         if form.name.data != '-':
@@ -150,7 +157,7 @@ def change_maps(_id):
 @blueprint.route('/add_image/<_id>', methods=['GET', 'POST'])
 def upload_file(_id):
     from data.forms import UploadForm
-    from main import photos
+    from server import photos
     form = UploadForm()
     if form.validate_on_submit():
         filename = photos.save(form.photo.data)

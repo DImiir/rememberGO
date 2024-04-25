@@ -1,8 +1,9 @@
+import requests
 from flask import redirect, render_template, Blueprint
 from flask_login import login_user, current_user, login_required, logout_user
-from data.__all_models import *
+
 from data import db_session
-import requests
+from data.__all_models import *
 
 blueprint = Blueprint('main_bp', __name__, template_folder='templates')
 
@@ -31,9 +32,11 @@ def main_notes():
         MAPS = db_sess.query(Maps2).filter().all()
     data = []
     for note in MAPS:
-        data.append((get_map2(get_coordinates2(note.place), note), note))
         if note.head:
-            data.append((get_map2(get_coordinates2(note.place), note, note.head.city), note))
+            city = db_sess.query(Maps1).filter(Maps1.id == note.head).first().city
+            data.append((get_map2(get_coordinates2(note.place), note, city), note))
+        else:
+            data.append((get_map2(get_coordinates2(note.place), note), note))
     return render_template('main_notes.html', data=data)
 
 
@@ -108,23 +111,31 @@ def get_coordinates2(place_name):
 
 def get_map1(ll, maps):
     points = []
-    for num in range(len(maps.maps)):
-        points.append(f"{get_coordinates2(f'{maps.city},{maps.maps[num].place}')},pmwtm{num + 1}")
-        if maps.maps[num].type:
-            points.append(f"{get_coordinates2(f'{maps.city},{maps.maps[num].place}')},pmgrm{num + 1}")
-    map_params = {"ll": ",".join([str(ll[0]), str(ll[1])]), 'l': 'map', "pt": '~'.join(points)}
-    map_api_server = "http://static-maps.yandex.ru/1.x/?apikey=fbd7d1f6-f3ac-4002-91a2-cc0552631701&size=300,300&l=map&"
-    return f'{map_api_server}ll={map_params["ll"]}&pt={map_params["pt"]}'
+    try:
+        for num in range(len(maps.maps)):
+            points.append(f"{get_coordinates2(f'{maps.city},{maps.maps[num].place}')},pmwtm{num + 1}")
+            if maps.maps[num].type:
+                points.append(f"{get_coordinates2(f'{maps.city},{maps.maps[num].place}')},pmgrm{num + 1}")
+        map_params = {"ll": ",".join([str(ll[0]), str(ll[1])]), 'l': 'map', "pt": '~'.join(points)}
+        map_api_server = ("http://static-maps.yandex.ru/1.x/?apikey=fbd7d1f6-f3ac-4002-91a2-cc0552631701&size=300,"
+                          "300&l=map&")
+        return f'{map_api_server}ll={map_params["ll"]}&pt={map_params["pt"]}'
+    except Exception as error:
+        return False, error
 
 
 def get_map2(ll, map, city=False):
-    point = f"{get_coordinates2(f'{map.place}')},pmwtm"
-    map_api_server = "http://static-maps.yandex.ru/1.x/?apikey=fbd7d1f6-f3ac-4002-91a2-cc0552631701&size=300,300&l=map&"
-    if map.type:
-        point = f"{get_coordinates2(f'{map.place}')},pmgrm"
-    if city:
-        point = f"{get_coordinates2(f'{city},{map.place}')},pmwtm"
+    try:
+        point = f"{get_coordinates2(f'{map.place}')},pmwtm"
+        map_api_server = ("http://static-maps.yandex.ru/1.x/?apikey=fbd7d1f6-f3ac-4002-91a2-cc0552631701&size=300,"
+                          "300&l=map&")
         if map.type:
-            point = f"{get_coordinates2(f'{city},{map.place}')},pmgrm"
-    map_params = {"ll": ll, 'l': 'map', "pt": point, "z": 13}
-    return f'{map_api_server}ll={map_params["ll"]}&pt={map_params["pt"]}&z={map_params["z"]}'
+            point = f"{get_coordinates2(f'{map.place}')},pmgrm"
+        if city:
+            point = f"{get_coordinates2(f'{city},{map.place}')},pmwtm"
+            if map.type:
+                point = f"{get_coordinates2(f'{city},{map.place}')},pmgrm"
+        map_params = {"ll": ll, 'l': 'map', "pt": point, "z": 13}
+        return f'{map_api_server}ll={map_params["ll"]}&pt={map_params["pt"]}&z={map_params["z"]}'
+    except Exception as error:
+        return False, error
