@@ -11,7 +11,7 @@ itsdangerous
 Jinja2
 MarkupSafe
 requests
-SQLAlchemy
+sqlalchemy
 SQLAlchemy-serializer
 typing_extensions
 urllib3
