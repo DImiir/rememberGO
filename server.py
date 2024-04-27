@@ -26,10 +26,9 @@ def load_user(user_id):
     return db_sess.query(User).get(user_id)
 
 
-@app.route('/')
 def main():
     db_session.global_init("db/tables.sqlite")
-    return "OK"
+    app.run()
 
 
 if __name__ == '__main__':

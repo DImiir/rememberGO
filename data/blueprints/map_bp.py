@@ -4,9 +4,9 @@ import os
 from flask import redirect, render_template, Blueprint, abort, request
 from flask_login import login_required, current_user
 
+from data import db_session
 from data.__all_models import *
 from data.blueprints.main_bp import get_map1, get_map2, get_coordinates1, get_coordinates2
-from server import db_session
 
 blueprint = Blueprint('map_bp', __name__, template_folder='templates')
 
