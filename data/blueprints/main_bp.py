@@ -41,7 +41,7 @@ def main_notes():
 
 
 @blueprint.route('/main/register', methods=['GET', 'POST'])
-def reqister():
+def register():
     from data.forms import RegisterForm
     form = RegisterForm()
     if form.validate_on_submit():
